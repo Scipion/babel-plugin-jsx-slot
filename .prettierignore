@@ -1,0 +1,13 @@
+# Ignore test fixtures
+/test/**/output.js
+test/**/output.js
+/test/fixtures/**/output.js
+test/fixtures/**/output.js
+**/output.js
+#test
+#test/
+#/test/
+#/test
+#/test/*.*
+#/test/*.*
+#/test/**/*.*

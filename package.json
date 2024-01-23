@@ -1,0 +1,27 @@
+{
+  "name": "babel-plugin-jsx-slot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf dist && NODE_ENV=production babel ./src --out-dir ./dist",
+    "test": "jest",
+    "test:coverage": "rm -rf output && jest --coverage=true --coverageDirectory=output --coverageProvider=v8"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.23.3",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-react": "^7.23.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/helper-plugin-test-runner": "^7.22.5",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  }
+}
