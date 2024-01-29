@@ -35,7 +35,7 @@ export default function (babel) {
       JSXElement(path) {
         const openingElement = path.node.openingElement;
         const openingElementName = openingElement.name.name;
-        if (openingElementName.toLowerCase() !== "slot") {
+        if (openingElementName?.toLowerCase() !== "slot") {
           return;
         }
 

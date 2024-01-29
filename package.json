@@ -2,16 +2,18 @@
   "name": "babel-plugin-jsx-slot",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
-  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf dist && NODE_ENV=production babel ./src --out-dir ./dist",
+    "build": "rm -rf dist && NODE_ENV=production babel ./src --out-file ./dist/index.js",
     "test": "jest",
     "test:coverage": "rm -rf output && jest --coverage=true --coverageDirectory=output --coverageProvider=v8"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Jorge Beltran",
+    "url": "https://github.com/Scipion"
+  },
+  "license": "BSD-3-Clause",
   "dependencies": {
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/preset-env": "^7.23.8",

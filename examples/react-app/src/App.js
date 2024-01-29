@@ -1,5 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { Box } from "./Box";
 
 function App() {
   return (
@@ -17,6 +18,13 @@ function App() {
         >
           Learn React
         </a>
+        <Box>
+          <p slot="content">
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <h1 slot="title">Lorem ipsum dolor sit amet</h1>
+        </Box>
       </header>
     </div>
   );
