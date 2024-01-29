@@ -106,8 +106,3 @@ If a first argument is an object pattern (as in `function({a, b, c}){...}`) the 
 
 WIP
 Qwik framework already contains `Slot` native component and it does not work with default `{children}`
-
-## svelte slot props
-
-TODO:
-https://svelte.dev/repl/06bcd6be783246eeb06786eed3242e84?version=3.53.1
