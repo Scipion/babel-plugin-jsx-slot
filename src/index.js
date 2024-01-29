@@ -15,8 +15,8 @@ export default function (babel) {
         // <Box><div slot="foo">bar</div></Box>
         // to
         // <Box __slot_foo={<div>bar</div>}></Box>
-        const element = path.findParent((n) => n.isJSXElement());
-        const parentElement = element.findParent((n) => n.isJSXElement());
+        const element = path.findParent(t.isJSXElement);
+        const parentElement = element.findParent(t.isJSXElement);
         const clonedElement = t.cloneNode(element.node);
         clonedElement.openingElement.attributes =
           clonedElement.openingElement.attributes.filter(
@@ -40,99 +40,81 @@ export default function (babel) {
         }
 
         // SLOT setup
-        const slotNameNode = openingElement.attributes.find(
+        const slotAttrNameNode = openingElement.attributes.find(
           (attr) => attr.name.name === "name"
         );
-        const slotValue = slotNameNode?.value?.value;
+        const slotValue = slotAttrNameNode?.value?.value;
         const slotElmenetChildren = path.node.children;
 
         // COMPONENT function setup
         const component = path.getFunctionParent();
         const firstParam = component.node.params[0];
-        let firstParamId = t.isAssignmentPattern(firstParam)
-          ? firstParam.left
-          : firstParam;
-        let firstParamIsId = true;
 
         if (component.isArrowFunctionExpression()) {
           component.arrowFunctionToExpression();
         }
 
-        if (!slotNameNode) {
-          // UNNAMED Element SLOT
-          // {p.children} or {props.children} ore {children} case
-
-          // 1. Set param to function expression
-          const idChildren = t.identifier("children");
-          if (component.node.params.length === 0) {
-            firstParamId = t.identifier("props");
-            component.node.params = [t.identifier("props")];
-          } else if (t.isObjectPattern(component.node.params[0])) {
-            component.node.params[0].properties.push(
-              t.objectProperty(
-                t.cloneNode(idChildren),
-                t.cloneNode(idChildren),
-                false,
-                true
-              )
-            );
-            firstParamIsId = false;
-          }
-
-          // 2. Replace <slot> with {props.children} or {children}
-
-          transformSlotTag(
-            t,
-            path,
-            firstParamIsId,
-            slotElmenetChildren,
-            firstParamId,
-            "children"
-          );
-        } else {
+        // UNNAMED Element SLOT
+        // {p.children} or {props.children} or {children} case
+        let slotReplacementName = "children";
+        if (slotAttrNameNode) {
           // NAMED Element SLOT
-          // {x, __slot_name} case
-
-          // 1. add param children
-          const idChildren = t.identifier("__slot_" + slotValue);
-          if (component.node.params.length === 0) {
-            firstParamId = t.identifier("props");
-            component.node.params = [t.identifier("props")];
-          } else if (t.isObjectPattern(component.node.params[0])) {
-            // function({a, b}) { ... }
-            component.node.params[0].properties.push(
-              t.objectProperty(
-                t.cloneNode(idChildren),
-                t.cloneNode(idChildren),
-                false,
-                true
-              )
-            );
-            firstParamIsId = false;
-          }
-
-          // 2. replace slot with {children} {param.children}
-
-          transformSlotTag(
-            t,
-            path,
-            firstParamIsId,
-            slotElmenetChildren,
-            firstParamId,
-            "__slot_" + slotValue
-          );
+          // {x, y, z, ..., __slot_name} case
+          slotReplacementName = "__slot_" + slotValue;
         }
+
+        // 1. Set param to function expression
+        const { firstParamId, firstParamIsId } = setParamToComponent(
+          t,
+          component,
+          firstParam,
+          slotReplacementName
+        );
+
+        // 2. Replace <slot> with {props.children} or {children} or {props.__slot_x} or {__slot_x}
+        transformSlotTag(
+          t,
+          path,
+          firstParamId,
+          firstParamIsId,
+          slotElmenetChildren,
+          slotReplacementName
+        );
       },
     },
   };
 }
 
+function setParamToComponent(t, component, firstParam, childrenName) {
+  let firstParamId = t.isAssignmentPattern(firstParam)
+    ? firstParam.left
+    : firstParam;
+  let firstParamIsId = true;
+  const idChildren = t.identifier(childrenName);
+
+  if (component.node.params.length === 0) {
+    firstParamId = t.identifier("props");
+    component.node.params = [t.identifier("props")];
+  } else if (t.isObjectPattern(component.node.params[0])) {
+    component.node.params[0].properties.push(
+      t.objectProperty(
+        t.cloneNode(idChildren),
+        t.cloneNode(idChildren),
+        false,
+        true
+      )
+    );
+    firstParamIsId = false;
+  }
+  return { firstParamId, firstParamIsId };
+}
+
 function transformSlotTag(
   t,
   path,
+  firstParamId,
   firstParamIsId,
   slotElmenetChildren,
-  firstParamId,
   propName
 ) {
   const getPropIdentifier = () => t.Identifier(propName);
