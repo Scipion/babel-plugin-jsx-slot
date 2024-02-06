@@ -2,4 +2,9 @@ node_modules
 output
 test
 examples
+src
 .*
+
+babel.config.js
+jest.config.js
+TODO.md

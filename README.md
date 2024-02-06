@@ -13,7 +13,7 @@ yarn add -D babel-plugin-jsx-slot
 ```
 
 ```bash
-pnpm add -D bable-plugin-jsx-slot
+pnpm i -D babel-plugin-jsx-slot
 ```
 
 ## Configuration

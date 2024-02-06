@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-slot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use slot tag in jsx as native",
   "keywords": [
     "babel-plugin",
@@ -11,6 +11,10 @@
   "author": {
     "name": "Jorge Beltran",
     "url": "https://github.com/Scipion"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Scipion/babel-plugin-jsx-slot"
   },
   "main": "dist/index.js",
   "scripts": {
