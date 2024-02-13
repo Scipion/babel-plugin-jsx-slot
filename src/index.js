@@ -2,7 +2,8 @@ export default function (babel) {
   const { types: t } = babel;
 
   return {
-    name: "babel-plugin-react-slot",
+    name: "babel-plugin-jsx-slot",
+    inherits: require("@babel/plugin-syntax-jsx").default,
     visitor: {
       JSXAttribute(path) {
         const attrName = path.node.name.name;
